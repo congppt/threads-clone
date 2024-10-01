@@ -17,6 +17,5 @@ AsyncSession = sessionmaker(
 Base = declarative_base()
 
 async def get_db_async():
-    async with AsyncSession() as async_session:
-        async with async_session.begin() as session:
-            yield session
+    async with AsyncSession() as session:
+        yield session
