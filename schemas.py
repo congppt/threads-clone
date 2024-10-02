@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
 
@@ -10,13 +11,13 @@ class UserRegister(UserBase):
     password: str
 class UserDisplay(UserBase):
     id: int
-    image_url: str | None
+    image_url: Optional[str]
     model_config=ConfigDict(from_attributes=True)
     
 
 class PostBase(BaseModel):
-    img_url: str | None
-    content: str | None
+    img_url: Optional[str]
+    content: Optional[str]
 
 class PostDisplay(PostBase):
     id: int

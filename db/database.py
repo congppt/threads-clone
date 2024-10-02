@@ -4,10 +4,11 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
+from models import *
 
 DATABASE_URL = os.getenv("DATABASE")
 
-engine = create_async_engine(DATABASE_URL, echo=True, future=True)
+engine = create_async_engine(DATABASE_URL, echo=True)
 
 AsyncSession = sessionmaker(
     bind=engine,
@@ -16,7 +17,7 @@ AsyncSession = sessionmaker(
 )
 
 Base = declarative_base()
-@asynccontextmanager
+
 async def get_db_async():
     try:
         async with AsyncSession() as session:
