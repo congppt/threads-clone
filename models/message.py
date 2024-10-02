@@ -1,9 +1,10 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
-from models.base_entity import BaseEntity
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from db.database import Base
 
-class Message(BaseEntity):
+class Message(Base):
     __tablename__="messages"
+    id = Column(Integer, primary_key=True, index=True)
+    created_at = Column(DateTime)
     content = Column(String)
     from_user_id = Column(Integer, ForeignKey("users.id"))
     to_user_id = Column(Integer, ForeignKey("users.id"))

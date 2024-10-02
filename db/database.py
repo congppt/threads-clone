@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 import os
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 DATABASE_URL = os.getenv("DATABASE")
 
-engine = create_async_engine(DATABASE_URL)
+engine = create_async_engine(DATABASE_URL, echo=True, future=True)
 
 AsyncSession = sessionmaker(
     bind=engine,
@@ -15,7 +16,11 @@ AsyncSession = sessionmaker(
 )
 
 Base = declarative_base()
-
+@asynccontextmanager
 async def get_db_async():
-    async with AsyncSession() as session:
-        yield session
+    try:
+        async with AsyncSession() as session:
+            yield session
+    except:
+        await session.rollback()
+        raise

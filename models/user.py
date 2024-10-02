@@ -1,10 +1,12 @@
-from sqlalchemy import Column, String
-from models.base_entity import BaseEntity
+from sqlalchemy import Column, DateTime, Integer, String
 from sqlalchemy.orm import relationship
+from db.database import Base
 
-class User(BaseEntity):
+class User(Base):
     __tablename__="users"
-    name = Column(String),
+    id = Column(Integer, primary_key=True, index=True)
+    created_at = Column(DateTime)
+    name = Column(String)
     username = Column(String, index=True, unique=True)
     hashed_password = Column(String)
     imageUrl = Column(String, nullable=True)

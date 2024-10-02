@@ -2,6 +2,7 @@ fastapi
 uvicorn
 sqlalchemy[asyncio]
 asyncpg
+alembic
 bcrypt
 python-jose
 python-multipart
