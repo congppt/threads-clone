@@ -12,8 +12,8 @@ async def get_users():
 
 @router.post("", response_model=UserDisplay)
 async def create_user(request: UserRegister, db = Depends(get_db_async)):
-    return await service.create_user(request, db)
+    return await service.create_user_async(request, db)
 
 @router.post("/auth")
 async def auth(request: OAuth2PasswordRequestForm = Depends(), db = Depends(get_db_async)):
-    return await service.auth(request, db)
+    return await service.auth_async(request, db)

@@ -16,7 +16,7 @@ class UserDisplay(UserBase):
     
 
 class PostBase(BaseModel):
-    img_url: Optional[str]
+    image_url: Optional[str]
     content: Optional[str]
 
 class PostDisplay(PostBase):

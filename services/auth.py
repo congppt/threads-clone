@@ -16,7 +16,7 @@ def gen_token(claims: Dict[str, Any]):
     claims.update({"exp": expired_at})
     return jwt.encode(claims, SECRET_KEY, ALGORITHM)
 
-def get_claims(token: str = Depends(oauth2_scheme)) -> Dict[str, Any]:
+def get_claims(token: str) -> Dict[str, Any]:
     try:
         return jwt.decode(token, SECRET_KEY, "HS256")
     except JWTError:
