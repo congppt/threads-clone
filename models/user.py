@@ -10,5 +10,5 @@ class User(Base):
     name = Column(String)
     username = Column(String, index=True, unique=True)
     hashed_password = Column(LargeBinary)
-    imageUrl = Column(String, nullable=True)
+    image_url = Column(String, nullable=True)
     posts = relationship("Post", back_populates="user")

@@ -5,7 +5,7 @@ from jose import jwt, JWTError
 from fastapi import Depends
 import os
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/auth")
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
