@@ -7,7 +7,7 @@ from schemas import UserBase, UserDisplay, UserRegister
 router = APIRouter(prefix="/users", tags=["user"])
 
 @router.get("")
-async def get_users():
+async def get_users_async():
     return "users"
 
 @router.get("/{id}", response_model=UserDisplay)
