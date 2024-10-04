@@ -1,14 +1,15 @@
-from sqlalchemy import Column, DateTime, Integer, LargeBinary, String
-from sqlalchemy.orm import relationship
 from db.database import Base
-from models import post
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import DateTime
+from datetime import datetime
 
 class User(Base):
-    __tablename__="users"
-    id = Column(Integer, primary_key=True, index=True)
-    created_at = Column(DateTime(timezone=True))
-    name = Column(String)
-    username = Column(String, index=True, unique=True)
-    hashed_password = Column(LargeBinary)
-    image_url = Column(String, nullable=True)
-    posts = relationship("Post", back_populates="user")
+    __tablename__ = "users"
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+    created_at: Mapped[datetime]
+    name: Mapped[str]
+    username: Mapped[str] = mapped_column(index=True, unique=True)
+    hashed_password: Mapped[bytes]
+    image_url: Mapped[str | None]
+    posts: Mapped[list["Post"]] = relationship(back_populates="user")

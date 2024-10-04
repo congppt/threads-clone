@@ -1,13 +1,16 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from datetime import datetime
 from db.database import Base
-from models import user
+from models.user import User
+from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy import ForeignKey
 
 class Post(Base):
-    __tablename__="posts"
-    id = Column(Integer, primary_key=True, index=True)
-    created_at = Column(DateTime(timezone=True))
-    content = Column(String, nullable=True)
-    image_url = Column(String, nullable=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="posts")
+    __tablename__ = "posts"
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+    created_at: Mapped[datetime]
+    content: Mapped[str | None]
+    image_url: Mapped[str | None]
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    is_deleted: Mapped[bool] = mapped_column(default=False)
+    user: Mapped["User"] = relationship(back_populates="posts")
