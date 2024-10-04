@@ -243,6 +243,7 @@ env/
 venv/
 ENV/
 environments/
+environment/
 env.bak/
 venv.bak/
 
