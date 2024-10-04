@@ -13,4 +13,5 @@ async def get_posts():
 
 @router.post("", response_model=PostDisplay)
 async def create_post(request: PostBase, db = Depends(get_db_async), user= Depends(get_current_user_async)):
-    return await service.create_post(request, user, db)
+    post = await service.create_post_async(request, user, db)
+    return post

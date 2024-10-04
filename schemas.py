@@ -13,7 +13,6 @@ class UserDisplay(UserBase):
     id: int
     image_url: Optional[str]
     model_config=ConfigDict(from_attributes=True)
-    
 
 class PostBase(BaseModel):
     image_url: Optional[str]
@@ -22,7 +21,7 @@ class PostBase(BaseModel):
 class PostDisplay(PostBase):
     id: int
     created_at: datetime
-    user: UserBase
+    user_id: int
     model_config=ConfigDict(from_attributes=True)
 
 class MessageBase(BaseModel):

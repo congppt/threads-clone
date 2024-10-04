@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from fastapi.security import OAuth2PasswordRequestForm
 from services import user as service
 from db.database import get_db_async
@@ -10,10 +10,13 @@ router = APIRouter(prefix="/users", tags=["user"])
 async def get_users():
     return "users"
 
+@router.get("/{id}", response_model=UserDisplay)
+async def get_user_by_id_async(id: int = Path(ge=1), db = Depends(get_db_async)):
+    return await service.get_user_by_id_async(id, db)
 @router.post("", response_model=UserDisplay)
-async def create_user(request: UserRegister, db = Depends(get_db_async)):
+async def create_user_async(request: UserRegister, db = Depends(get_db_async)):
     return await service.create_user_async(request, db)
 
 @router.post("/auth")
-async def auth(request: OAuth2PasswordRequestForm = Depends(), db = Depends(get_db_async)):
+async def auth_async(request: OAuth2PasswordRequestForm = Depends(), db = Depends(get_db_async)):
     return await service.auth_async(request, db)

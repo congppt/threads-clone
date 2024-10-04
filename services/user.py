@@ -39,3 +39,11 @@ async def get_current_user_async(token: str = Depends(oauth2_scheme), db: AsyncS
         return user_id
     except:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized")
+    
+async def get_user_by_id_async(id: int, db: AsyncSession):
+    query = select(User).where(User.id == id)
+    try:
+        user = (await db.execute(query)).scalar_one()
+        return user
+    except:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} was not found")
