@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from db import database
 from routers import message, post, user
+
 load_dotenv()
 app = FastAPI()
 origins = ["*"]
