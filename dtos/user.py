@@ -12,3 +12,7 @@ class UserDisplay(UserBase):
     id: int
     image_url: Optional[str]
     model_config=ConfigDict(from_attributes=True)
+
+class UserProfile(BaseModel):
+    name: str
+    image_url: Optional[str]

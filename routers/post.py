@@ -23,6 +23,7 @@ async def create_post_async(request: PostBase, db = Depends(get_db_async), user 
 @router.put("/{id}", response_model=PostDisplay)
 async def update_post_async(request: PostBase, id: int = Path(ge=1), db = Depends(get_db_async), user = Depends(get_current_user_async)):
     return await service.update_post_async(id, request, user, db)
+
 @router.delete("/{id}")
 async def delete_post_async(id: int = Path(ge=1), db = Depends(get_db_async), user = Depends(get_current_user_async)):
     return await service.delete_post_async(id, user, db)

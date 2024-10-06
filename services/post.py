@@ -7,7 +7,7 @@ from dtos.post import PostBase
 from sqlalchemy.ext.asyncio import AsyncSession
 
 async def create_post_async(request: PostBase, user: dict[str, Any], db: AsyncSession):
-    post = Post(user_id = user, content = request.content, image_url = request.image_url, created_at = datetime.now(timezone.utc))
+    post = Post(user_id = int(user["id"]), content = request.content, image_url = request.image_url, created_at = datetime.now(timezone.utc))
     db.add(post)
     await db.commit()
     await db.refresh(post)
@@ -16,8 +16,8 @@ async def create_post_async(request: PostBase, user: dict[str, Any], db: AsyncSe
 async def get_post_by_id_async(id: int, db: AsyncSession):
     query = select(Post).where(Post.id == id, Post.is_deleted == False)
     try:
-        user = (await db.execute(query)).scalar_one()
-        return user
+        post = (await db.execute(query)).scalar_one()
+        return post
     except:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post with id {id} was not found")
 
