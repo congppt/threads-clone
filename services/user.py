@@ -36,7 +36,7 @@ async def get_current_user_async(token: str = Depends(oauth2_scheme), db: AsyncS
         query = select(exists().where(User.id == user_id))
         if not (await db.execute(query)).scalar():
             raise
-        return user_id
+        return claims
     except:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized")
     

@@ -11,12 +11,12 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_MINUTES = int(os.getenv("ACCESS_TOKEN_MINUTES"))
 
-def gen_token(claims: Dict[str, Any]):
+def gen_token(claims: dict[str, Any]):
     expired_at = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_MINUTES)
     claims.update({"exp": expired_at})
     return jwt.encode(claims, SECRET_KEY, ALGORITHM)
 
-def get_claims(token: str) -> Dict[str, Any]:
+def get_claims(token: str) -> dict[str, Any]:
     try:
         return jwt.decode(token, SECRET_KEY, "HS256")
     except JWTError:

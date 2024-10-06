@@ -6,9 +6,9 @@ from dtos.user import UserDisplay, UserRegister
 
 router = APIRouter(prefix="/users", tags=["user"])
 
-""" @router.get("")
+@router.get("")
 async def get_users_async(username: str = Query(), pageSize : int = Query(ge=1), db = Depends(get_db_async)):
-    return "users" """
+    return "users"
 
 @router.get("/{id}", response_model=UserDisplay)
 async def get_user_by_id_async(id: int = Path(ge=1), db = Depends(get_db_async)):
