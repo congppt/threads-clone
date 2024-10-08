@@ -2,7 +2,6 @@ from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer
 from typing import Any, Dict
 from jose import jwt, JWTError
-from fastapi import Depends
 import os
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/auth")

@@ -1,12 +1,27 @@
+from contextlib import contextmanager
+import logging
+import os
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import message, post, user
+from routers import routers
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
-app = FastAPI()
-origins = ["*"]
+
+origins = os.getenv("ALLOWED_ORGS").split(",")
+
+@contextmanager
+def lifespan(app: FastAPI):
+    logger.info("App started")
+    yield
+    logger.info("App shutdown")
+
+app = FastAPI(lifespan=lifespan)
+
 app.add_middleware(CORSMiddleware, allow_origins = origins, allow_headers = ["*"], allow_credentials=True, allow_methods=["*"])
-app.include_router(user.router)
-app.include_router(post.router)
-app.include_router(message.router)
+
+for router in routers:
+    app.include_router(router)
+

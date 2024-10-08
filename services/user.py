@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import exists, select
 from db.database import get_db_async
-from models.user import User
+from db.models.user import User
 from dtos.user import UserDisplay, UserProfile, UserRegister
 from sqlalchemy.ext.asyncio import AsyncSession
 from services.auth import gen_token
