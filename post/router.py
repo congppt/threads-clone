@@ -5,7 +5,7 @@ from dependencies import get_current_user_async
 from post.schemas import PostBase, PostDisplay
 from post import service
 
-post_router = APIRouter(prefix="/posts", tags=["post"])
+post_router = APIRouter(prefix="/posts", tags=["Post"])
 
 @post_router.get("/{id}")
 async def get_post_by_id_async(id: int = Path(ge=1), db = Depends(get_db_async)):
