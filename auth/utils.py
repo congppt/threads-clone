@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import os
 from typing import Any
-from bcrypt import checkpw, hashpw, gensalt
+from bcrypt import checkpw
 from jose import jwt
 from jose.exceptions import ExpiredSignatureError, JWTClaimsError, JWTError
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -9,8 +9,6 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_MINUTES = int(os.getenv("ACCESS_TOKEN_MINUTES"))
 REFRESH_TOKEN_MINUTES = int(os.getenv("REFRESH_TOKEN_MINUTES"))
 
-def hash(pwd: str) -> str:
-    return hashpw(pwd.encode(), gensalt())
 
 def is_correct_pwd(pwd: str, hashed_pwd: bytes):
     return checkpw(pwd.encode(), hashed_pwd)
