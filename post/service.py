@@ -1,9 +1,8 @@
-from datetime import datetime, timezone
 from typing import Any,  Optional
 from fastapi import HTTPException, status
-from sqlalchemy import desc, select, update
+from sqlalchemy import desc, select
 from db.models.post import Post
-from dtos.post import PostBase
+from post.schemas import PostBase
 from sqlalchemy.ext.asyncio import AsyncSession
 
 async def create_post_async(request: PostBase, user: dict[str, Any], db: AsyncSession):

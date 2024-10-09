@@ -1,6 +1,6 @@
 from db.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
+from db.models.message import Message
 class Chat(Base):
     __tablename__ = "chats"
     id: Mapped[int] = mapped_column(primary_key=True)

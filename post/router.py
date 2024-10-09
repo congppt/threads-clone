@@ -2,8 +2,8 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Path, Query
 from db.database import get_db_async
 from dependencies import get_current_user_async
-from dtos.post import PostBase, PostDisplay
-import service
+from post.schemas import PostBase, PostDisplay
+from post import service
 
 post_router = APIRouter(prefix="/posts", tags=["post"])
 

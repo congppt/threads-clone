@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Path, Query
 from db.database import get_db_async
 from dependencies import get_current_user_async
-import service
+from user import service
 from user.schemas import UserDisplay, UserProfile, UserRegister
 
 

@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Cookie, Depends, Response
-import service
+from auth import service
 from db.database import get_db_async
 from dependencies import get_current_user_async
 

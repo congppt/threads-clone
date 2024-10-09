@@ -1,20 +1,16 @@
 from typing import Any
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import HTTPException, status
 from sqlalchemy import exists, select
-from db.database import get_db_async
 from db.models.user import User
-from schemas import UserDisplay, UserProfile, UserRegister
+from user.schemas import UserProfile, UserRegister
 from sqlalchemy.ext.asyncio import AsyncSession
-from services.auth import gen_token
-from utils import hash
-from services.auth import oauth2_scheme, get_claims
+from user.utils import hash
 
 async def create_user_async(request: UserRegister, db: AsyncSession):
     query = select(exists().where(User.username == request.username))
     if (await db.execute(query)).scalar():
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username already exist!")
-    user = User(name = request.name, username = request.username, hashed_password = hash.hash(request.password))
+    user = User(name = request.name, username = request.username, hashed_password = hash(request.password))
     db.add(user)
     await db.commit()
     await db.refresh(user)

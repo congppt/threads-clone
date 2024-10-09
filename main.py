@@ -1,4 +1,4 @@
-from contextlib import contextmanager
+from contextlib import asynccontextmanager
 import logging
 import os
 from dotenv import load_dotenv
@@ -12,8 +12,8 @@ load_dotenv()
 
 origins = os.getenv("ALLOWED_ORGS").split(",")
 
-@contextmanager
-def lifespan(app: FastAPI):
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     logger.info("App started")
     yield
     logger.info("App shutdown")

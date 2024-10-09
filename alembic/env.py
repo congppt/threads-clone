@@ -22,7 +22,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from db.database import Base
-from models import message, post, user, chat, chat_participant
+from db.models import message, post, user, chat, chat_participant
 
 target_metadata = Base.metadata
 
