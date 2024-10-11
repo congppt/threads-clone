@@ -1,11 +1,10 @@
 from datetime import datetime
-from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
 
 class PostBase(BaseModel):
-    image_url: Optional[str]
-    content: Optional[str]
+    image_url: str | None
+    content: str | None
 
 class PostDisplay(PostBase):
     id: int

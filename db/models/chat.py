@@ -10,6 +10,7 @@ class ChatType(enum.Enum):
 class Chat(Base):
     __tablename__ = "chats"
     id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
     type: Mapped[str] = mapped_column(Enum(ChatType))
     messages: Mapped[list["Message"]] = relationship(back_populates="chat")
     users: Mapped[list["User"]] = relationship(secondary="chat_participants", back_populates="chats")
