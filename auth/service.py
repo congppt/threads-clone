@@ -9,7 +9,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth")
 
 async def authenticate_async(username: str, password: str, db: AsyncSession) -> User:
     user = await _get_user_by_username_async(username, db)
-    if not user or not utils.is_correct_pwd(password, user.hashed_password):
+    if user is None or not utils.is_correct_pwd(password, user.hashed_password):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail = "Password or username incorrect")
     return user
 
@@ -29,11 +29,11 @@ async def refresh_access_token(refresh_token: str, db: AsyncSession) -> str:
         raise creds_exception
     
     username = payload.get("username")
-    if not username:
+    if username is None:
         raise creds_exception
     
     user = await _get_user_by_username_async(payload["username"])
-    if not user:
+    if user is None:
         raise creds_exception
     access_token = gen_access_token(user)
     return access_token

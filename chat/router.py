@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Path, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from chat import service
-from chat.schemas import ChatBase, ChatDisplay, ChatMessage, ChatMessages
+from chat.schemas import ChatBase, ChatDisplay, ChatMessages, ChatPage
 from db.database import get_db_async
 from db.models.user import User
 from dependencies import get_current_user_async
@@ -18,3 +18,8 @@ async def try_create_chat_async(request: ChatBase, user: User = Depends(get_curr
 async def get_chat_messages_async(id: Annotated[int, Path(ge=1)], limit: Annotated[int, Query(10, ge=1)], before_message_id: Annotated[int | None, Query(None, ge=1)], user: User = Depends(get_db_async), db: AsyncSession = Depends(get_db_async)):
     messages, has_more = await service.get_chat_messages_async(id, limit, before_message_id, user, db)
     return ChatMessages(messages = messages, has_more = has_more)
+
+@chat_router.get("", response_model=ChatPage)
+async def get_user_chats_async(limit: Annotated[int, Query(10, ge=1)], before_id: Annotated[int | None, Query(None, ge=1)], user: User = Depends(get_db_async), db: AsyncSession = Depends(get_db_async)):
+    chats, has_more = await service.get_user_chats_async(limit, before_id, user, db)
+    return ChatPage(chats = chats, has_more = has_more)

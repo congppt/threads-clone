@@ -1,3 +1,4 @@
+from datetime import datetime
 import enum
 from db.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -13,6 +14,7 @@ class Chat(Base):
     name: Mapped[str]
     type: Mapped[str] = mapped_column(Enum(ChatType))
     messages: Mapped[list["Message"]] = relationship(back_populates="chat")
+    last_message_at: Mapped[datetime]
     users: Mapped[list["User"]] = relationship(secondary="chat_participants", back_populates="chats")
     
 

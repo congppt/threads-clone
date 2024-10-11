@@ -21,5 +21,10 @@ class ChatMessages(BaseModel):
     has_more: bool
     model_config = ConfigDict(from_attributes=True)
 
+class ChatPage(BaseModel):
+    chats: list[ChatDisplay]
+    has_more: bool
+    model_config = ConfigDict(from_attributes=True)
+
 
 
