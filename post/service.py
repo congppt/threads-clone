@@ -1,9 +1,14 @@
+import os
 from typing import Any,  Optional
+import uuid
 from fastapi import HTTPException, status
 from sqlalchemy import desc, select
 from db.models.post import Post
 from post.schemas import PostBase
 from sqlalchemy.ext.asyncio import AsyncSession
+from settings import Settings
+
+AWS_BUCKET = os.getenv("AWS_BUCKET")
 
 async def create_post_async(request: PostBase, user: dict[str, Any], db: AsyncSession):
     post = Post(user_id = int(user["id"]), content = request.content, image_url = request.image_url)
@@ -61,3 +66,9 @@ async def update_post_async(id: int, request: PostBase, user: dict[str, Any], db
     # if result.rowcount == 0:
     #     raise HTTPException(status_code=status.HTTP_418_IM_A_TEAPOT, detail=f"Post no longer exist or accessible")
     return post
+
+def create_presigned_url():
+    s3 = Settings.get_aws_s3_client()
+    object_name = str(uuid.uuid4())
+    url = s3.generate_presigned_post(AWS_BUCKET, object_name, ExpiredIn=360)
+    return url

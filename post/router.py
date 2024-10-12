@@ -27,3 +27,6 @@ async def update_post_async(request: PostBase, id: Annotated[int, Path(ge=1)], d
 async def delete_post_async(id: int = Path(ge=1), db = Depends(get_db_async), user = Depends(get_current_user_async)):
     return await service.delete_post_async(id, user, db)
 
+@post_router.get("/upload-image")
+def get_presigned_url_async(user = Depends(get_current_user_async)):
+    return service.create_presigned_url()
