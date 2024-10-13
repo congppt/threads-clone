@@ -1,0 +1,2 @@
+class WebSocketTooManyRequests(Exception):
+    pass

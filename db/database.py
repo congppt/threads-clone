@@ -1,4 +1,5 @@
 import os
+from redis.asyncio import ConnectionPool
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -6,7 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from db.models import *
 
 DATABASE_URL = os.getenv("DATABASE")
-
+REDIS_URL = os.getenv("REDIS")
 engine = create_async_engine(DATABASE_URL, echo=True)
 
 AsyncSession = sessionmaker(
@@ -24,3 +25,8 @@ async def get_db_async():
     except:
         await session.rollback()
         raise
+
+def create_redis_pool():
+    return ConnectionPool.from_url(REDIS_URL)
+
+redis_pool = create_redis_pool()

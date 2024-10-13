@@ -2,7 +2,7 @@ import asyncio
 from logging.config import fileConfig
 import os
 
-from sqlalchemy import pool
+from sqlalchemy import MetaData, pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
@@ -24,7 +24,7 @@ if config.config_file_name is not None:
 from db.database import Base
 from db.models import message, post, user, chat, chat_participant
 
-target_metadata = Base.metadata
+target_metadata: MetaData = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
