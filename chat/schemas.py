@@ -26,5 +26,15 @@ class ChatPage(BaseModel):
     has_more: bool
     model_config = ConfigDict(from_attributes=True)
 
+class ReceiveMessage(BaseModel):
+    chat_id: int
+    content: str
 
+class SendMessage(BaseModel):
+    type: str = "new"
+    message_id: int
+    chat_id: int
+    user_id: int
+    content: str
+    created_at: datetime
 

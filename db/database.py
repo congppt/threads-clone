@@ -1,5 +1,5 @@
 import os
-from redis.asyncio import ConnectionPool
+from redis.asyncio import ConnectionPool, Redis
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -30,3 +30,6 @@ def create_redis_pool():
     return ConnectionPool.from_url(REDIS_URL)
 
 redis_pool = create_redis_pool()
+
+def get_cache():
+    return Redis(connection_pool=redis_pool)

@@ -23,4 +23,4 @@ async def get_current_user_async(access_token: Annotated[str | None, Cookie()], 
     if not user:
         raise creds_exception
     return user
-        
+
