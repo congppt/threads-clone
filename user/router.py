@@ -19,6 +19,6 @@ async def get_user_by_id_async(id: int = Path(ge=1), db = Depends(get_db_async))
 async def create_user_async(request: UserRegister, db = Depends(get_db_async)):
     return await service.create_user_async(request, db)
 
-@user_router.put("/{id}", response_model=UserDisplay, summary="Update user profile")
+@user_router.put("", response_model=UserDisplay, summary="Update user profile")
 async def update_user_profile_async(request: UserProfile, user = Depends(get_current_user_async), db = Depends(get_db_async)):
     return await service.update_user_profile_async(request, user, db)

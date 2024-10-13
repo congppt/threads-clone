@@ -4,14 +4,15 @@ import uuid
 from fastapi import HTTPException, status
 from sqlalchemy import desc, select
 from db.models.post import Post
+from db.models.user import User
 from post.schemas import PostBase
 from sqlalchemy.ext.asyncio import AsyncSession
 from settings import Settings
 
 AWS_BUCKET = os.getenv("AWS_BUCKET")
 
-async def create_post_async(request: PostBase, user: dict[str, Any], db: AsyncSession):
-    post = Post(user_id = int(user["id"]), content = request.content, image_url = request.image_url)
+async def create_post_async(request: PostBase, user: User, db: AsyncSession):
+    post = Post(user_id = user.id, content = request.content, image_url = request.image_url)
     db.add(post)
     await db.commit()
     await db.refresh(post)
@@ -34,9 +35,9 @@ async def get_posts_async(user_id: Optional[int], before_id: Optional[int], limi
     posts = (await db.execute(query)).scalars().all()
     return posts
 
-async def delete_post_async(id: int, user: dict[str, Any], db : AsyncSession):
+async def delete_post_async(id: int, user: User, db : AsyncSession):
     post = await get_post_by_id_async(id, db)
-    if post.user_id != int(user["id"]):
+    if post.user_id != user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
     post.is_deleted = True
     try:
@@ -50,9 +51,9 @@ async def delete_post_async(id: int, user: dict[str, Any], db : AsyncSession):
     #     raise HTTPException(status_code=status.HTTP_418_IM_A_TEAPOT, detail=f"Post not exist or accessible")
     return "Deleted"
 
-async def update_post_async(id: int, request: PostBase, user: dict[str, Any], db: AsyncSession):
+async def update_post_async(id: int, request: PostBase, user: User, db: AsyncSession):
     post = await get_post_by_id_async(id, db)
-    if post.user_id != int(user["id"]):
+    if post.user_id != user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No permission")
     post.content = request.content
     post.image_url = request.image_url
@@ -69,6 +70,6 @@ async def update_post_async(id: int, request: PostBase, user: dict[str, Any], db
 
 def create_presigned_url():
     s3 = Settings.get_aws_s3_client()
-    object_name = str(uuid.uuid4())
-    url = s3.generate_presigned_post(AWS_BUCKET, object_name, ExpiredIn=360)
+    object_name = "post-image/" + str(uuid.uuid4()) + ".jpeg"
+    url = s3.generate_presigned_post(AWS_BUCKET, object_name, ExpiresIn=360)
     return url

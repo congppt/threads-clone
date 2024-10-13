@@ -1,5 +1,6 @@
-import datetime
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict
+from uvicorn import Config
 from db.models.chat import ChatType
 
 class ChatBase(BaseModel):
@@ -10,6 +11,7 @@ class ChatDisplay(BaseModel):
     id : int
     name: str | None
     type: ChatType
+    model_config = ConfigDict(from_attributes=True)
 
 class MessageDisplay(BaseModel):
     id: int

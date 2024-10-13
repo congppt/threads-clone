@@ -1,6 +1,6 @@
 import logging
 from fastapi import HTTPException, WebSocket, status
-from sqlalchemy import desc, select
+from sqlalchemy import and_, desc, select
 from sqlalchemy.orm import selectinload
 from chat.schemas import ChatBase, ReceiveMessage, SendMessage
 from db.models.chat import Chat, ChatType
@@ -18,7 +18,7 @@ async def try_create_chat_async(request: ChatBase, user: User, db: AsyncSession)
     chat = None
     if len(request.user_ids) == 1:
         user_id = next(iter(request.user_ids))
-        recipient = await __get_user_by_id_async(user_id)
+        recipient = await __get_user_by_id_async(user_id, db)
         if recipient is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {user_id} not exist")
         chat = await try_get_direct_chat_async(user, recipient, db)
@@ -43,7 +43,7 @@ async def __get_user_by_id_async(user_id: int, db: AsyncSession) -> User | None:
     return user
 
 async def try_get_direct_chat_async(user: User, recipient: User, db: AsyncSession) -> Chat | None:
-    query = select(Chat).where(Chat.type == ChatType.DIRECT, Chat.users.contains([user, recipient]))
+    query = select(Chat).where(Chat.type == ChatType.DIRECT, and_(Chat.users.any(User.id == user.id), Chat.users.any(User.id == recipient.id)))
     result = await db.execute(query)
     chat = result.scalar_one_or_none()
     return chat
@@ -70,7 +70,7 @@ async def get_chat_by_id_async(id: int, user: User, db: AsyncSession) -> Chat:
     return chat
 
 async def get_user_chats_async(limit: int, before_id: int | None, user: User, db: AsyncSession) -> tuple[list[Chat], bool]:
-    query = select(Chat).where(Chat.users.contains(user)).order_by(desc(Chat.last_message_at), Chat.id).limit(limit + 1)
+    query = select(Chat).where(Chat.users.any(User.id == user.id)).order_by(desc(Chat.last_message_at), Chat.id).limit(limit + 1)
     if before_id is not None:
         query = query.where(Chat.id < before_id)
     result = await db.execute(query)
@@ -91,7 +91,7 @@ async def start_listening_async(ws: WebSocket, user: User, db: AsyncSession):
     return chat_ids
 
 async def get_user_chat_ids_async(user: User, db: AsyncSession) -> set[int]:
-    query = select(Chat.id).where(Chat.users.contains(user))
+    query = select(Chat.id).where(Chat.users.any(User.id == user.id))
     result = await db.execute(query)
     chats = result.scalars().all()
     return chats

@@ -19,7 +19,7 @@ async def _get_user_by_username_async(username: str, db: AsyncSession) -> User:
     user = result.scalar()
     return user
 
-async def refresh_access_token(refresh_token: str, db: AsyncSession) -> str:
+async def refresh_access_token_async(refresh_token: str, db: AsyncSession) -> str:
     creds_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail = "Could not validate credentials", headers = {"WWW-Authenticate": "Bearer"})
     
     try:
@@ -32,7 +32,7 @@ async def refresh_access_token(refresh_token: str, db: AsyncSession) -> str:
     if username is None:
         raise creds_exception
     
-    user = await _get_user_by_username_async(payload["username"])
+    user = await _get_user_by_username_async(payload["username"], db)
     if user is None:
         raise creds_exception
     access_token = gen_access_token(user)

@@ -4,7 +4,10 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_limiter import FastAPILimiter
 from routers import routers
+from redis.asyncio import Redis
+from db.database import redis_pool
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +18,8 @@ origins = os.getenv("ALLOWED_ORGS").split(",")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("App started")
+    redis = Redis(connection_pool=redis_pool)
+    await FastAPILimiter.init(redis)
     yield
     logger.info("App shutdown")
 

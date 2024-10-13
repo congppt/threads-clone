@@ -24,11 +24,11 @@ async def get_user_by_id_async(id: int, db: AsyncSession):
     except:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} was not found")
     
-async def update_user_profile_async(request: UserProfile, user: dict[str, Any], db: AsyncSession):
-    curr_user = await get_user_by_id_async(int(user["id"]), db)
-    curr_user.name = request.name
-    curr_user.image_url = request.image_url
+async def update_user_profile_async(request: UserProfile, user: User, db: AsyncSession):
+    user.name = request.name
+    user.image_url = request.image_url
     try:
         await db.commit()
+        return user
     except:
         raise HTTPException(status_code=status.HTTP_418_IM_A_TEAPOT, detail=f"Profile not exist or accessible")

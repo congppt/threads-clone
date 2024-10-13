@@ -26,7 +26,7 @@ async def authenticate_async(response: Response, request: OAuth2PasswordRequestF
 
 @auth_router.get("/refresh", summary="Refresh access token")
 async def refresh_access(response: Response, refresh_token: Annotated[str, Cookie()], db: AsyncSession = Depends(get_db_async)):
-    access_token = await service.refresh_access_token(refresh_token, db)
+    access_token = await service.refresh_access_token_async(refresh_token, db)
     response.set_cookie(key="access_token", value=access_token, httponly=True, samesite="none",secure=True)
     return "Access token has been renewed"
 

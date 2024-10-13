@@ -19,7 +19,7 @@ async def get_current_user_async(access_token: Annotated[str | None, Cookie()], 
     if not username:
         raise creds_exception
     
-    user = await _get_user_by_username_async(username)
+    user = await _get_user_by_username_async(username, db)
     if not user:
         raise creds_exception
     return user

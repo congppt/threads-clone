@@ -7,12 +7,16 @@ from post import service
 
 post_router = APIRouter(prefix="/posts", tags=["Post"])
 
+@post_router.get("/upload-image")
+def get_presigned_url_async(user = Depends(get_current_user_async)):
+    return service.create_presigned_url()
+
 @post_router.get("/{id}", summary="Get post by id")
 async def get_post_by_id_async(id: int = Path(ge=1), db = Depends(get_db_async)):
     return await service.get_post_by_id_async(id, db)
 
 @post_router.get("", response_model= list[PostDisplay], summary="Get post list")
-async def get_posts_async(user_id: Annotated[int | None, Query(None, ge=1)], before_id: Annotated[int | None, Query(None, ge=1)], limit : Annotated[int, Query(10, ge=1)], db = Depends(get_db_async)):
+async def get_posts_async(user_id: Annotated[int | None, Query(ge=1)] = None, before_id: Annotated[int | None, Query(ge=1)] = None, limit : Annotated[int, Query(ge=1)] = 10, db = Depends(get_db_async)):
     return await service.get_posts_async(user_id, before_id, limit, db)
 
 @post_router.post("", response_model=PostDisplay, summary="Create post")
@@ -27,6 +31,3 @@ async def update_post_async(request: PostBase, id: Annotated[int, Path(ge=1)], d
 async def delete_post_async(id: int = Path(ge=1), db = Depends(get_db_async), user = Depends(get_current_user_async)):
     return await service.delete_post_async(id, user, db)
 
-@post_router.get("/upload-image")
-def get_presigned_url_async(user = Depends(get_current_user_async)):
-    return service.create_presigned_url()
