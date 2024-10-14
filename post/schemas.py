@@ -6,8 +6,15 @@ class PostBase(BaseModel):
     image_url: str | None
     content: str | None
 
+
 class PostDisplay(PostBase):
     id: int
     created_at: datetime
     user_id: int
-    model_config=ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True)
+
+
+class PostPage(BaseModel):
+    posts: list[PostDisplay]
+    has_more: bool
+    model_config = ConfigDict(from_attributes=True)

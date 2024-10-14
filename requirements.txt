@@ -8,6 +8,6 @@ python-jose
 python-multipart
 python-dotenv
 boto3
-fastapi-pagination
 fastapi-limiter
 redis
+websockets
